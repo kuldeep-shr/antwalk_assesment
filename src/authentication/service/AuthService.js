@@ -19,6 +19,11 @@ const createUserService = async (args) => {
       magic_link_expires: getMagicLink.magic_link_expires,
     });
     saveUser.magic_link_token = getMagicLink.magic_link_url;
+    const getToken = createJWTToken({
+      id: saveUser.id,
+      email: saveUser.email,
+    });
+    saveUser.jwt = getToken;
     return {
       isError: false,
       message: "user created successfully",

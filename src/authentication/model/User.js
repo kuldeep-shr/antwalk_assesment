@@ -23,8 +23,7 @@ const createUser = async (args) => {
     return res.rows[0];
   } catch (error) {
     await client.query("ROLLBACK");
-    console.error("Error executing query", error.stack);
-    throw error;
+    throw "Error executing query";
   } finally {
     client.release();
   }
@@ -51,24 +50,22 @@ const findUser = async (args) => {
 
     queryText += " " + conditions.join(" AND ");
     queryText += " LIMIT 1";
-    console.log("SQL QUERY.....", queryText);
     const res = await client.query(queryText, values);
     return res.rows[0];
-  } catch (e) {
-    console.error("Error executing query", e.stack);
-    throw e;
+  } catch (error) {
+    throw "something went wrong, while find user";
   } finally {
     client.release();
   }
 };
 
-// const findUserByMagicLink = async (args) => {
-//   const client = await poolQuery.connect();
-//   try {
-//     const queryText = `
-//       SELECT
-//     `;
-//   } catch (error) {}
-// };
+const findUserByMagicLink = async (args) => {
+  const client = await poolQuery.connect();
+  try {
+    const queryText = `
+      SELECT * FROM ${TABLE_USER} WHERE email=? AND magic_link_token=? AND magic_link_expires>NOW() 
+    `;
+  } catch (error) {}
+};
 
 export { createUser, findUser };

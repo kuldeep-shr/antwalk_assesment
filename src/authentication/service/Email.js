@@ -14,7 +14,6 @@ const sendEmail = async (to, subject, text, html) => {
       },
     });
 
-    // Define email options
     let mailOptions = {
       from: EMAIL_FROM,
       to: to,
@@ -23,7 +22,6 @@ const sendEmail = async (to, subject, text, html) => {
       html: html,
     };
 
-    // Send email
     let info = await transporter.sendMail(mailOptions);
     return {
       message: "Email successfully sent!",

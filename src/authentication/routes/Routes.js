@@ -3,6 +3,6 @@ const router = express.Router();
 
 import { register } from "../controller/UserController.js";
 
-router.post("/signup", register);
+router.post("/signin", register);
 
 export default router;

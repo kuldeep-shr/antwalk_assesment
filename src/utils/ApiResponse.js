@@ -1,4 +1,3 @@
-//Here are the some common functions, api response, array object operations
 const successResponse = (data, message = "success", statusCode = 200) => {
   return {
     status: "success",
