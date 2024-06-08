@@ -14,10 +14,25 @@ const createTodo = async (req, res) => {
     });
     return res
       .status(201)
-      .json(successResponse(newTodo, "todo is created", 201));
+      .json(successResponse(newTodo.data, "todo is created", 201));
   } catch (error) {
     res.status(400).json(errorResponse(error.message, 400));
   }
 };
 
-export { createTodo };
+const updateTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const fields = req.body;
+    const updateTodo = await TodoService.updateTodo(id, fields);
+    return res
+      .status(200)
+      .json(
+        successResponse(updateTodo.data, "todo is updated successfully", 200)
+      );
+  } catch (error) {
+    res.status(400).json(errorResponse(error.message, 400));
+  }
+};
+
+export { createTodo, updateTodo };

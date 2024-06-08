@@ -1,13 +1,20 @@
 import TodoModel from "../model/Todo.js";
 
-const createTodoList = async (args) => {
-  const newTodo = await TodoModel.createTodoList(args);
+const createTodo = async (args) => {
+  const newTodo = await TodoModel.createTodo(args);
   return {
-    data: newTodo.rows,
+    data: newTodo,
+  };
+};
+const updateTodo = async (id, args) => {
+  const updateTodo = await TodoModel.updateTodo(id, args);
+  return {
+    data: updateTodo,
   };
 };
 
 const TodoService = {
-  createTodoList,
+  createTodo,
+  updateTodo,
 };
 export default TodoService;
