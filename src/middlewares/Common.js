@@ -8,7 +8,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { errorResponse } from "../utils/ApiResponse.js";
-// import moment from "momentjs";
+const { SECRET_KEY, MAGIC_LINK_URL } = process.env;
 
 const generateToken = () => {
   return new Promise((resolve, reject) => {
@@ -25,8 +25,7 @@ const generateToken = () => {
 const createMagicLink = async (args) => {
   try {
     const getLink = await generateToken();
-    const magicLink = `http://localhost:8000/api/auth/validate?email=${args.email}&link=${getLink}`;
-    console.log("magicLink", magicLink);
+    const magicLink = `${MAGIC_LINK_URL}?email=${args.email}&link=${getLink}`;
     const expiresTime = new Date(Date.now() + 15 * 60 * 1000);
     return {
       magic_link_url: magicLink,
@@ -40,7 +39,7 @@ const createMagicLink = async (args) => {
 
 const createJWTToken = (args, expiresIn = "24h") => {
   try {
-    return jwt.sign(args, process.env.SECRET_KEY, { expiresIn });
+    return jwt.sign(args, SECRET_KEY, { expiresIn });
   } catch (error) {
     throw "something went wrong, while creating the jwt token";
   }
@@ -48,15 +47,16 @@ const createJWTToken = (args, expiresIn = "24h") => {
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
+  console.log("In Token........", token);
   if (!token) {
-    return errorResponse("No token provided", 400);
+    return res.status(400).json(errorResponse("No token provided", 400));
   }
   try {
-    const decoded = jwt.verify(token.split(" ")[1], process.env.SECRET_KEY);
+    const decoded = jwt.verify(token.split(" ")[1], SECRET_KEY);
     req.user = decoded;
     next();
   } catch (error) {
-    return errorResponse("Invalid token", 400);
+    return res.status(400).json(errorResponse("Invalid token", 400));
   }
 };
 

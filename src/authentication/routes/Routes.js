@@ -1,9 +1,12 @@
 import express from "express";
 const router = express.Router();
 
-import { register, validateMagicLink } from "../controller/UserController.js";
+import {
+  register,
+  validationOfMagicLink,
+} from "../controller/UserController.js";
 
 router.post("/signin", register);
-router.get("/validate", validateMagicLink);
+router.get("/validate", validationOfMagicLink);
 
 export default router;

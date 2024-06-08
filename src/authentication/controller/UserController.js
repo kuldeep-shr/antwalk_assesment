@@ -1,16 +1,15 @@
-import {
-  createUserService,
-  getMagicLinkDetails,
-} from "../service/AuthService.js";
+import UserService from "../service/UserService.js";
 import { successResponse, errorResponse } from "../../utils/ApiResponse.js";
 import { sendEmail } from "../service/Email.js";
 
 const register = async (req, res) => {
   try {
     const { name, email } = req.body;
-    const savingData = await createUserService({ name: name, email: email });
+    const savingData = await UserService.createUserService({
+      name: name,
+      email: email,
+    });
     if (!savingData.isError) {
-      console.log("in controller....", savingData);
       await sendEmail(
         email,
         "Magic Link",
@@ -28,10 +27,9 @@ const register = async (req, res) => {
   }
 };
 
-const validateMagicLink = async (req, res) => {
+const validationOfMagicLink = async (req, res) => {
   try {
-    console.log("REQ.params", req.query);
-    const validateLink = await getMagicLinkDetails({
+    const validateLink = await UserService.getMagicLinkDetails({
       email: req.query.email,
       magic_link_token: req.query.link,
     });
@@ -47,4 +45,4 @@ const validateMagicLink = async (req, res) => {
   }
 };
 
-export { register, validateMagicLink };
+export { register, validationOfMagicLink };

@@ -1,6 +1,8 @@
 import express from "express";
 import { poolQuery } from "./src/database/Connection.js";
-import authRoutes from "./src/authentication/routes/Routes.js";
+import AuthRoutes from "./src/authentication/routes/Routes.js";
+import TodoRoutes from "./src/todo/routes/Routes.js";
+
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
 
@@ -9,7 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", AuthRoutes);
+app.use("/api", TodoRoutes);
 
 // Test the database connection
 poolQuery.connect((err, client, release) => {

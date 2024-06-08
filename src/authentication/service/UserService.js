@@ -1,18 +1,20 @@
-import { createUser, findUser, findUserByMagicLink } from "../model/User.js";
-import { createMagicLink, createJWTToken } from "../../middlewares/Common.js";
+import UserModel from "../model/User.js";
+import { createJWTToken, createMagicLink } from "../../middlewares/Common.js";
 
 const createUserService = async (args) => {
   try {
     // validate email first
-    const isUserExists = await findUser({ email: args.email });
+    const isUserExists = await UserModel.findUser({ email: args.email });
     if (isUserExists) {
       return {
         isError: true,
         message: "user already exists",
       };
     }
-    const getMagicLink = await createMagicLink({ email: args.email });
-    const saveUser = await createUser({
+    const getMagicLink = await createMagicLink({
+      email: args.email,
+    });
+    const saveUser = await UserModel.createUser({
       name: args.name,
       email: args.email,
       magic_link_token: getMagicLink.magic_link_token,
@@ -35,14 +37,14 @@ const createUserService = async (args) => {
 
 const getMagicLinkDetails = async (args) => {
   try {
-    const isUserExists = await findUser({ email: args.email });
+    const isUserExists = await UserModel.findUser({ email: args.email });
     if (!isUserExists) {
       return {
         isError: true,
         message: "user not exists,please register with us",
       };
     }
-    const getMagicLinkDetails = await findUserByMagicLink(args);
+    const getMagicLinkDetails = await UserModel.findUserByMagicLink(args);
     if (getMagicLinkDetails.length == 0) {
       return {
         isError: true,
@@ -75,4 +77,8 @@ const getMagicLinkDetails = async (args) => {
   }
 };
 
-export { createUserService, getMagicLinkDetails };
+const UserService = {
+  createUserService,
+  getMagicLinkDetails,
+};
+export default UserService;
