@@ -10,6 +10,7 @@ const register = async (req, res) => {
     const { name, email } = req.body;
     const savingData = await createUserService({ name: name, email: email });
     if (!savingData.isError) {
+      console.log("in controller....", savingData);
       await sendEmail(
         email,
         "Magic Link",

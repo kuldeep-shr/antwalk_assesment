@@ -2,7 +2,6 @@ import { poolQuery } from "../../database/Connection.js";
 const { TABLE_USER } = process.env;
 
 const createUser = async (args) => {
-  console.log("TABLE_USER ENV", TABLE_USER);
   const client = await poolQuery.connect();
   try {
     await client.query("BEGIN");
@@ -17,7 +16,6 @@ const createUser = async (args) => {
       args.magic_link_token,
       args.magic_link_expires,
     ];
-    console.log("SQL QUERY.....", queryText);
     const res = await client.query(queryText, values);
     await client.query("COMMIT");
     return res.rows[0];

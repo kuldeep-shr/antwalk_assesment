@@ -8,7 +8,7 @@ Welcome to the To-Do Backend API! This API allows you to manage your to-do lists
 
 ## 🌟 Features
 
-- 🔒 User Authentication (Register/Login)
+- 🔒 User Authentication (Register)
 - 📋 Manage To-Do Items (CRUD operations)
 - 📁 Manage To-Do Lists
 - 🔍 Search and Filter To-Do Items
@@ -21,8 +21,7 @@ Welcome to the To-Do Backend API! This API allows you to manage your to-do lists
 
 - [Getting Started](#-getting-started)
 - [Authentication](#-authentication)
-  - [Register](#register)
-  - [Login](#login)
+  - [Signin](#signin)
 - [To-Do Items](#-to-do-items)
   - [Create Item](#create-item)
   - [Read Item](#read-item)
