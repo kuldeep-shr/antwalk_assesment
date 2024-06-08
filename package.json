@@ -1,0 +1,34 @@
+{
+  "name": "antwalk_assesment",
+  "version": "1.0.0",
+  "description": "small todo api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "create-table": "node ./src/database/CreateTable.js"
+  },
+  "type": "module",
+  "keywords": [
+    "todo",
+    "antwalk"
+  ],
+  "author": "kuldeep",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/nodemailer": "^6.4.15",
+    "@types/pg": "^8.11.6",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "momentjs": "^2.0.0",
+    "nodemailer": "^6.9.13",
+    "pg": "^8.12.0",
+    "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}
