@@ -1,4 +1,4 @@
-import { createUser, findUser } from "../model/User.js";
+import { createUser, findUser, findUserByMagicLink } from "../model/User.js";
 import { createMagicLink, createJWTToken } from "../../middlewares/Common.js";
 
 const createUserService = async (args) => {
@@ -19,11 +19,6 @@ const createUserService = async (args) => {
       magic_link_expires: getMagicLink.magic_link_expires,
     });
     saveUser.magic_link_token = getMagicLink.magic_link_url;
-    const getToken = createJWTToken({
-      id: saveUser.id,
-      email: saveUser.email,
-    });
-    saveUser.jwt = getToken;
     return {
       isError: false,
       message: "user created successfully",
@@ -38,7 +33,7 @@ const createUserService = async (args) => {
   }
 };
 
-const userLogin = async (args) => {
+const getMagicLinkDetails = async (args) => {
   try {
     const isUserExists = await findUser({ email: args.email });
     if (!isUserExists) {
@@ -47,6 +42,37 @@ const userLogin = async (args) => {
         message: "user not exists,please register with us",
       };
     }
-  } catch (error) {}
+    const getMagicLinkDetails = await findUserByMagicLink(args);
+    if (getMagicLinkDetails.length == 0) {
+      return {
+        isError: true,
+        message: "magic link is expired",
+      };
+    } else {
+      if (getMagicLinkDetails[0].magic_link_token !== args.magic_link_token) {
+        return {
+          isError: true,
+          message: "invalid magic link",
+        };
+      } else {
+        const getToken = createJWTToken({
+          id: isUserExists.id,
+          email: args.email,
+        });
+        return {
+          isError: false,
+          data: { jwt: getToken },
+          message: "magic link is correct",
+        };
+      }
+    }
+  } catch (error) {
+    return {
+      isError: true,
+      message: "something went wrong, while user creating",
+      data: [],
+    };
+  }
 };
-export { createUserService };
+
+export { createUserService, getMagicLinkDetails };

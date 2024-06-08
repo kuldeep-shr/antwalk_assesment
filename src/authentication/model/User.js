@@ -62,10 +62,22 @@ const findUser = async (args) => {
 const findUserByMagicLink = async (args) => {
   const client = await poolQuery.connect();
   try {
+    console.log("argsss", args);
     const queryText = `
-      SELECT * FROM ${TABLE_USER} WHERE email=? AND magic_link_token=? AND magic_link_expires>NOW() 
+      SELECT id, email, magic_link_token, magic_link_expires 
+      FROM ${TABLE_USER} 
+      WHERE email = $1 
+        AND magic_link_token = $2 
+        AND magic_link_expires > NOW()
     `;
-  } catch (error) {}
+    const res = await client.query(queryText, [
+      args.email,
+      args.magic_link_token,
+    ]);
+    return res.rows;
+  } catch (error) {
+    throw "something went wrong, while fetching the magic link details";
+  }
 };
 
-export { createUser, findUser };
+export { createUser, findUser, findUserByMagicLink };
