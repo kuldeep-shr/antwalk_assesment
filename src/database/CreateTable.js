@@ -22,8 +22,8 @@ async function createTables() {
 
     const createTableForTodos = `
       -- Define ENUM types for status and priority
-      CREATE TYPE todo_status AS ENUM ('To-Do', 'In Progress', 'Completed', 'On Hold', 'Canceled', 'Pending', 'Deferred', 'Blocked', 'Review');
-      CREATE TYPE todo_priority AS ENUM ('High', 'Medium', 'Low');
+      CREATE TYPE todo_status AS ENUM ('todo', 'inprogress', 'completed', 'onhold', 'canceled', 'pending', 'review');
+      CREATE TYPE todo_priority AS ENUM ('high', 'medium', 'low');
 
       -- Create the todo table if it doesn't already exist
       CREATE TABLE IF NOT EXISTS ${TABLE_TODO} (

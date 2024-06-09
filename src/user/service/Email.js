@@ -24,11 +24,11 @@ const sendEmail = async (to, subject, text, html) => {
 
     let info = await transporter.sendMail(mailOptions);
     return {
-      message: "Email successfully sent!",
+      message: "email successfully sent!",
       messageId: info.messageId,
     };
   } catch (error) {
-    throw "Error occurred while sending email:";
+    throw "error occurred while sending email:";
   }
 };
 

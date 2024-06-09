@@ -26,10 +26,10 @@ const createMagicLink = async (args) => {
   try {
     const getLink = await generateToken();
     const magicLink = `${MAGIC_LINK_URL}?email=${args.email}&link=${getLink}`;
-    const expiresTime = new Date(Date.now() + 15 * 60 * 1000);
+    const expiresTime = new Date(Date.now() + 5 * 60 * 1000);
     return {
+      link: getLink,
       magic_link_url: magicLink,
-      magic_link_token: getLink,
       magic_link_expires: expiresTime,
     };
   } catch (error) {
@@ -47,7 +47,6 @@ const createJWTToken = (args, expiresIn = "24h") => {
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
-  console.log("In Token........", token);
   if (!token) {
     return res.status(400).json(errorResponse("No token provided", 400));
   }

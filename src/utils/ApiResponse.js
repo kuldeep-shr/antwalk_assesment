@@ -1,4 +1,4 @@
-const successResponse = (data, message = "success", statusCode = 200) => {
+const successResponse = (data, message, statusCode) => {
   return {
     status: "success",
     message,
@@ -7,7 +7,7 @@ const successResponse = (data, message = "success", statusCode = 200) => {
   };
 };
 
-const errorResponse = (message = "Internal Server Error", statusCode = 500) => {
+const errorResponse = (message, statusCode) => {
   return {
     status: "error",
     message,
