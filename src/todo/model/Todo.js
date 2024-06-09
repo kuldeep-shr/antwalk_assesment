@@ -97,7 +97,7 @@ const listTodo = async (args) => {
           data: res.rows,
         };
       } else {
-        throw "no todo list exists";
+        throw new Error("no todo list exists");
       }
     } else {
       const buildQuery = (args) => {
@@ -175,7 +175,30 @@ const listTodo = async (args) => {
       return res.rows;
     }
   } catch (error) {
-    throw "something went wrong while fetching the todos";
+    return {
+      isError: true,
+      message: error.message || "something went wrong while fetching the todos",
+    };
+  } finally {
+    client.release();
+  }
+};
+
+const deleteTodoById = async (todoId, userId) => {
+  const client = await poolQuery.connect();
+  try {
+    const queryText = `DELETE FROM todos WHERE id=$1 AND user_id=$2 RETURNING *`;
+    const res = await client.query(queryText, [todoId, userId]);
+    if (res.rows.length == 0) {
+      throw new Error("no todo list exists");
+    } else {
+      return res.rows;
+    }
+  } catch (error) {
+    return {
+      isError: true,
+      message: error.message || "something went wrong while fetching the todos",
+    };
   } finally {
     client.release();
   }
@@ -185,5 +208,6 @@ const TodoModel = {
   createTodo,
   updateTodo,
   listTodo,
+  deleteTodoById,
 };
 export default TodoModel;

@@ -31,13 +31,14 @@ const updateTodo = async (req, res) => {
         successResponse(updateTodo.data, "todo is updated successfully", 200)
       );
   } catch (error) {
-    res.status(400).json(errorResponse(error.message, 400));
+    res.status(500).json(errorResponse("internal server error", 500));
   }
 };
 
 const listTodo = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("id", id, "req.user", req.user);
     const { page = 1, limit = 5 } = req.query; // Pagination parameters with default values
     const status = req.query.status || "";
     const priority = req.query.priority || "";
@@ -71,10 +72,32 @@ const listTodo = async (req, res) => {
     };
 
     const listTodo = await TodoService.listTodo(args);
+    if (listTodo.isError) {
+      return res.status(400).json(errorResponse(listTodo.message, 400));
+    }
     return res.status(200).json(successResponse(listTodo, "todo list", 200));
   } catch (error) {
-    res.status(400).json(errorResponse(error.message, 400));
+    console.log("error out", error);
+    res.status(500).json(errorResponse("internal server error", 500));
   }
 };
 
-export { createTodo, updateTodo, listTodo };
+const deleteTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const deletedTodo = await TodoService.deleteTodo(parseInt(id), userId);
+    console.log("deletedTodo", deletedTodo);
+    if (deletedTodo.isError) {
+      return res.status(400).json(errorResponse(deletedTodo.message, 400));
+    }
+    return res
+      .status(200)
+      .json(successResponse(deletedTodo.data, deletedTodo.message, 200));
+  } catch (error) {
+    res.status(500).json(errorResponse("internal server error", 500));
+  }
+};
+
+export { createTodo, updateTodo, listTodo, deleteTodo };
