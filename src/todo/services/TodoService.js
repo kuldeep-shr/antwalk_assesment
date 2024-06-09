@@ -30,7 +30,7 @@ const deleteTodo = async (todoId, userId) => {
       throw new Error(deletedTodo.message);
     }
     return {
-      data: [deletedTodo],
+      data: deletedTodo,
       message: "todo deleted successfully",
     };
   } catch (error) {

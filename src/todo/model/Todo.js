@@ -93,9 +93,7 @@ const listTodo = async (args) => {
             `;
       const res = await client.query(queryText, [args.todoId]);
       if (res.rows.length > 0) {
-        return {
-          data: res.rows,
-        };
+        return res.rows;
       } else {
         throw new Error("no todo list exists");
       }
