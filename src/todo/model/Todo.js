@@ -97,7 +97,7 @@ const listTodo = async (args) => {
           data: res.rows,
         };
       } else {
-        throw "No todo list exists";
+        throw "no todo list exists";
       }
     } else {
       const buildQuery = (args) => {
@@ -135,6 +135,32 @@ const listTodo = async (args) => {
           values.push(`%${args.description}%`);
         }
 
+        // Add sorting
+        const validSortColumns = ["due_date", "priority", "created_at"];
+        if (args.sortBy && args.sortBy.length > 0) {
+          const sortConditions = [];
+          for (const sortItem of args.sortBy) {
+            if (validSortColumns.includes(sortItem.column)) {
+              if (sortItem.column === "priority") {
+                sortConditions.push(`CASE 
+                        WHEN priority = 'low' THEN 1 
+                        WHEN priority = 'medium' THEN 2 
+                        WHEN priority = 'high' THEN 3 
+                        ELSE 4 
+                    END ${sortItem.direction === "desc" ? "DESC" : "ASC"}`);
+              } else {
+                sortConditions.push(
+                  `${sortItem.column} ${
+                    sortItem.direction === "desc" ? "DESC" : "ASC"
+                  }`
+                );
+              }
+            }
+          }
+          if (sortConditions.length > 0) {
+            queryText += ` ORDER BY ${sortConditions.join(", ")}`;
+          }
+        }
         // Pagination
         args.page = args.page == 0 ? 1 : args.page;
         queryText += ` OFFSET $${valueIndex++} LIMIT $${valueIndex++}`;

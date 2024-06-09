@@ -45,6 +45,18 @@ const listTodo = async (req, res) => {
     const description = req.query.description || "";
     const userId = req.user.id;
 
+    // Parse sortBy and sortDirection as arrays
+    const sortBy = req.query.sortBy ? req.query.sortBy.split("|") : [];
+    const sortDirection = req.query.sortDirection
+      ? req.query.sortDirection.split("|")
+      : [];
+
+    // Combine sortBy and sortDirection into an array of objects
+    const sortCriteria = sortBy.map((column, index) => ({
+      column: column,
+      direction: sortDirection[index] || "asc", // Default to 'asc' if direction is not specified
+    }));
+
     // Initialize the args object
     const args = {
       todoId: id ? parseInt(id) : 0,
@@ -55,6 +67,7 @@ const listTodo = async (req, res) => {
       description: description,
       page: parseInt(page),
       limit: parseInt(limit),
+      sortBy: sortCriteria,
     };
 
     const listTodo = await TodoService.listTodo(args);
