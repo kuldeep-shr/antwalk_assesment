@@ -10,12 +10,19 @@ const updateTodo = async (id, args) => {
   try {
     // check todo id exists
     const getTodoDetails = await listTodo({ todoId: id });
+
+    if (getTodoDetails.hasOwnProperty("message")) {
+      throw new Error("no any todo exists");
+    }
     const updateTodo = await TodoModel.updateTodo(id, args);
     return {
       data: [updateTodo],
     };
   } catch (error) {
-    throw error;
+    return {
+      isError: true,
+      message: error.message || "something went wrong while updating the todo",
+    };
   }
 };
 const listTodo = async (args) => {

@@ -104,7 +104,6 @@ const findUser = async (args) => {
 
 const findUserByMagicLink = async (args) => {
   const client = await poolQuery.connect();
-  console.log("ARGSZ", args);
   try {
     const queryText = `
       SELECT id, email, magic_link_token, magic_link_expires 

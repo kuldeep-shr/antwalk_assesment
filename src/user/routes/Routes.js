@@ -2,6 +2,11 @@ import express from "express";
 const router = express.Router();
 
 import {
+  registerSchemaValidation,
+  loginSchemaValidation,
+  updateSchemaValidation,
+} from "../../validation/User.js";
+import {
   register,
   login,
   validationOfMagicLink,
@@ -10,9 +15,9 @@ import {
 
 import { verifyToken } from "../../middlewares/Common.js";
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", registerSchemaValidation, register);
+router.post("/login", loginSchemaValidation, login);
 router.get("/validate", validationOfMagicLink);
-router.put("/users/:userId", verifyToken, updateUser);
+router.put("/users/:userId", updateSchemaValidation, verifyToken, updateUser);
 
 export default router;

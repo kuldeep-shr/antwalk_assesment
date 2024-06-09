@@ -360,3 +360,13 @@ Create a .env file in the root directory and add your configuration variables:
     "statusCode": 200
   }
   ```
+
+---
+
+<br />
+
+## 🏫&nbsp;For API Documentation and API collections:
+
+Hit below button <br />
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/30468072-7a5de737-59e3-483d-b3e1-a677295065da?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D30468072-7a5de737-59e3-483d-b3e1-a677295065da%26entityType%3Dcollection%26workspaceId%3D5bee838e-3bf4-4fea-bdbb-c1a9c11b29f8)

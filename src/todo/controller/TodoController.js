@@ -25,6 +25,10 @@ const updateTodo = async (req, res) => {
     const { id } = req.params;
     const fields = req.body;
     const updateTodo = await TodoService.updateTodo(id, fields);
+
+    if (updateTodo.isError) {
+      return res.status(400).json(errorResponse(updateTodo.message, 400));
+    }
     return res
       .status(200)
       .json(
@@ -76,7 +80,6 @@ const listTodo = async (req, res) => {
     }
     return res.status(200).json(successResponse(listTodo, "todo list", 200));
   } catch (error) {
-    console.log("error out", error);
     res.status(500).json(errorResponse("internal server error", 500));
   }
 };
