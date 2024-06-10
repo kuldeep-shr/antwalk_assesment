@@ -286,7 +286,7 @@ Create a .env file in the root directory and add your configuration variables:
 
 #### Get Specific Todo
 
-- **URL:** `/todo/3`
+- **URL:** `/todo/18`
 - **Method:** `GET`
 - **Headers:**
   - `Authorization: Bearer eyJhbXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWL6E`
@@ -296,21 +296,19 @@ Create a .env file in the root directory and add your configuration variables:
   {
     "status": "success",
     "message": "todo list",
-    "data": {
-      "data": [
-        {
-          "id": 3,
-          "user_id": 1,
-          "title": "communication workshop",
-          "description": "Arrange a workshop to enhance team communication skills, including active listening and conflict resolution.",
-          "status": "inprogress",
-          "priority": "medium",
-          "due_date": "2024-08-09T18:30:00.000Z",
-          "created_at": "2024-06-09T08:09:45.243Z",
-          "updated_at": "2024-06-09T08:09:45.243Z"
-        }
-      ]
-    },
+    "data": [
+      {
+        "todo_id": 18,
+        "user_id": 34,
+        "title": "Stop Phone",
+        "description": "I will not use my phone always because of so many problems",
+        "status": "todo",
+        "priority": "high",
+        "due_date": "2024-11-01T18:30:00.000Z",
+        "created_at": "2024-06-10T05:13:15.111Z",
+        "updated_at": "2024-06-10T05:13:15.111Z"
+      }
+    ],
     "statusCode": 200
   }
   ```
