@@ -58,7 +58,7 @@ const updateTodo = async (id, args) => {
       UPDATE ${TABLE_TODO} 
       SET ${setClause.join(", ")}, updated_at = NOW()
       WHERE id = $${idParamIndex}
-      RETURNING id, title, description, priority, status, user_id, created_at, updated_at;
+      RETURNING id, title, description, priority,due_date, status, user_id, created_at, updated_at;
     `;
 
     values.push(todoId);

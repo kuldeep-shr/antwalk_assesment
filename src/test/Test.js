@@ -4,11 +4,12 @@ import app from "../../app.js";
 import pkg from "pg";
 const { DB_CONNECTION } = process.env;
 
-describe("User Creation API", function () {
+describe("To-DO API Testing", function () {
   let pool;
   let magicLinkUrl;
   let jwtToken;
   let userId;
+  let todoId;
   before(function (done) {
     // Increase the timeout for database connection setup
     this.timeout(10000); // Set timeout to 10 seconds
@@ -123,8 +124,6 @@ describe("User Creation API", function () {
   });
 
   it("should update user information successfully", function (done) {
-    console.log("userId", userId);
-    console.log("jwtToken", jwtToken);
     this.timeout(10000); // Set timeout to 10 seconds for this test
     request(app)
       .put(`/api/users/${userId}`)
@@ -148,6 +147,85 @@ describe("User Creation API", function () {
         expect(userData).to.have.property("email").to.equal("dummy@test.com");
         expect(userData).to.have.property("created_at").to.be.a("string");
         expect(userData).to.have.property("updated_at").to.be.a("string");
+
+        done();
+      });
+  });
+
+  // for todo list
+  it("should create todo successfully", function (done) {
+    console.log("token", jwtToken);
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .post("/api/todo")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send({
+        title: "Writing test case",
+        description: "always write test case for better testing",
+        status: "todo",
+        priority: "high",
+        due_date: "2024-10-31T18:30:00.000Z",
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(201);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body).to.have.property("message").equal("todo is created");
+        expect(res.body).to.have.property("data").to.be.an("array");
+
+        const todoData = res.body.data[0];
+        expect(todoData).to.have.property("todo_id").to.be.a("number");
+        expect(todoData)
+          .to.have.property("title")
+          .to.equal("Writing test case");
+        expect(todoData)
+          .to.have.property("description")
+          .to.equal("always write test case for better testing");
+        expect(todoData).to.have.property("status").to.equal("todo");
+        expect(todoData).to.have.property("priority").to.equal("high");
+        expect(todoData).to.have.property("due_date");
+        todoId = todoData.id;
+        done();
+      });
+  });
+
+  it("should update todo successfully", function (done) {
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .put(`/api/todo/${todoId}`)
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send({
+        title: "Write Good Test Cases",
+        due_date: "2024-12-01",
+        status: "inprogress",
+        priority: "medium",
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body)
+          .to.have.property("message")
+          .equal("todo is updated successfully");
+        expect(res.body).to.have.property("data").to.be.an("array");
+
+        const todoData = res.body.data[0];
+        expect(todoData).to.have.property("id").to.be.a("number").equal(todoId);
+        expect(todoData)
+          .to.have.property("title")
+          .to.equal("Write Good Test Cases");
+        expect(todoData).to.have.property("description");
+        expect(todoData).to.have.property("priority").to.equal("medium");
+        expect(todoData).to.have.property("due_date").to.be.a("string");
+        expect(todoData).to.have.property("status").to.equal("inprogress");
+        expect(todoData)
+          .to.have.property("user_id")
+          .to.be.a("number")
+          .equal(userId);
+        expect(todoData).to.have.property("created_at").to.be.a("string");
+        expect(todoData).to.have.property("updated_at").to.be.a("string");
 
         done();
       });

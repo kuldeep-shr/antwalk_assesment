@@ -239,7 +239,7 @@ Create a .env file in the root directory and add your configuration variables:
 
 #### 🔄 &nbsp; Update a todo
 
-- **URL:** `/todo/7`
+- **URL:** `/todo/2`
 - **Method:** `PUT`
 - **Headers:**
   - `Content-Type: application/json`
@@ -248,9 +248,8 @@ Create a .env file in the root directory and add your configuration variables:
 
   ```json
   {
-    "title": "updating todo",
-    "description": "mono",
-    "priority": "high"
+    "title": "updating the task",
+    "due_date": "2024-10-10"
   }
   ```
 
@@ -262,14 +261,15 @@ Create a .env file in the root directory and add your configuration variables:
     "message": "todo is updated successfully",
     "data": [
       {
-        "id": 7,
-        "title": "updating todo",
-        "description": "mono",
-        "priority": "high",
-        "status": "completed",
-        "user_id": 1,
-        "created_at": "2024-06-09T08:10:30.757Z",
-        "updated_at": "2024-06-09T14:22:36.850Z"
+        "id": 2,
+        "title": "updating the task",
+        "description": "Organize a training program for new employees covering company policies and procedures.",
+        "priority": "medium",
+        "due_date": "2024-10-09T18:30:00.000Z",
+        "status": "inprogress",
+        "user_id": 6,
+        "created_at": "2024-06-09T08:09:23.916Z",
+        "updated_at": "2024-06-10T04:36:13.967Z"
       }
     ],
     "statusCode": 200
