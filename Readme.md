@@ -337,26 +337,26 @@ Create a .env file in the root directory and add your configuration variables:
     "message": "todo list",
     "data": [
       {
-        "id": 1,
-        "user_id": 6,
-        "title": "team building activity",
-        "description": "Organize team outing, coordinate logistics, and ensure smooth execution.",
-        "status": "inprogress",
-        "priority": "medium",
-        "due_date": "2024-06-29T18:30:00.000Z",
-        "created_at": "2024-06-09T07:53:31.273Z",
-        "updated_at": "2024-06-09T07:53:31.273Z"
+        "todo_id": 18,
+        "user_id": 34,
+        "title": "Stop Phone",
+        "description": "I will not use my phone always because of so many problems",
+        "status": "todo",
+        "priority": "high",
+        "due_date": "2024-11-01T18:30:00.000Z",
+        "created_at": "2024-06-10T05:13:15.111Z",
+        "updated_at": "2024-06-10T05:13:15.111Z"
       },
       {
-        "id": 2,
-        "user_id": 6,
-        "title": "Employee Training Program",
-        "description": "Organize a training program for new employees covering company policies and procedures.",
-        "status": "inprogress",
-        "priority": "medium",
-        "due_date": "2024-07-04T18:30:00.000Z",
-        "created_at": "2024-06-09T08:09:23.916Z",
-        "updated_at": "2024-06-09T08:09:23.916Z"
+        "todo_id": 19,
+        "user_id": 34,
+        "title": "No Outside Food",
+        "description": "I will not eat outside food as much as I always had",
+        "status": "todo",
+        "priority": "high",
+        "due_date": "2024-11-01T18:30:00.000Z",
+        "created_at": "2024-06-10T05:15:48.009Z",
+        "updated_at": "2024-06-10T05:15:48.009Z"
       }
     ],
     "statusCode": 200
