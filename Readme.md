@@ -208,11 +208,11 @@ Create a .env file in the root directory and add your configuration variables:
 
   ```json
   {
-    "title": "Market Research Analysis",
-    "description": "Review and analyze market research data to identify new opportunities.",
-    "status": "completed",
-    "priority": "medium",
-    "due_date": "2024-07-02"
+    "title": "Cycling task",
+    "description": "wake up and go for the long race",
+    "status": "todo",
+    "priority": "high",
+    "due_date": "2024-11-01"
   }
   ```
 
@@ -221,14 +221,16 @@ Create a .env file in the root directory and add your configuration variables:
   {
     "status": "success",
     "message": "todo is created",
-    "data": {
-      "todo_id": 7,
-      "title": "Market Research Analysis",
-      "description": "Review and analyze market research data to identify new opportunities.",
-      "status": "completed",
-      "priority": "medium",
-      "due_date": "2024-07-01T18:30:00.000Z"
-    },
+    "data": [
+      {
+        "todo_id": 8,
+        "title": "Cycling task",
+        "description": "wake up and go for the long race",
+        "status": "todo",
+        "priority": "high",
+        "due_date": "2024-10-31T18:30:00.000Z"
+      }
+    ],
     "statusCode": 201
   }
   ```

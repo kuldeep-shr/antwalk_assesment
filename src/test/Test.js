@@ -32,6 +32,38 @@ describe("User Creation API", function () {
     });
   });
 
+  /**
+   * User Creation API Test Suite:
+   * This test suite verifies the functionality of the user creation API endpoints.
+   * It includes tests for user registration, magic link verification, and user information update.
+   *
+   * Test Setup:
+   * - Establishes a database connection before running tests.
+   * - Uses the provided DB_CONNECTION environment variable for database connection.
+   *
+   * Test Cases:
+   * 1. should return status 201 and success message on successful user creation
+   *    - Sends a POST request to /api/register endpoint with dummy user data.
+   *    - Verifies the response status code, success message, and user data.
+   *
+   * 2. should verify magic link
+   *    - Makes a GET request to the constructed magic link URL.
+   *    - Verifies the response status code, success message, and JWT token.
+   *
+   * 3. should update user information successfully
+   *    - Sends a PUT request to /api/users/:userId endpoint with updated user data.
+   *    - Uses JWT token for authorization.
+   *    - Verifies the response status code, success message, and updated user data.
+   *
+   * Test Environment:
+   * - Uses Chai for assertions and Supertest for HTTP requests.
+   * - Assumes the availability of the app.js file to import the Express app.
+   *
+   * Additional Notes:
+   * - The database connection is established before all tests and closed after all tests are done.
+   * - Each test case includes error handling and timeouts to ensure robustness.
+   */
+
   it("should return status 201 and success message on successful user creation", function (done) {
     this.timeout(10000); // Set timeout to 10 seconds for this test
     request(app)
