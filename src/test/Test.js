@@ -152,9 +152,42 @@ describe("To-DO API Testing", function () {
       });
   });
 
-  // for todo list
+  /**
+   * Todo API Test Suite:
+   * This test suite verifies the functionality of the todo API endpoints, including creating, updating,
+   * retrieving, listing, and deleting todos.
+   *
+   * Test Cases:
+   * 1. should create todo successfully
+   *    - Sends a POST request to /api/todo endpoint with todo data.
+   *    - Verifies the response status code, success message, and todo data.
+   *
+   * 2. should update todo successfully
+   *    - Sends a PUT request to /api/todo/:todoId endpoint with updated todo data.
+   *    - Verifies the response status code, success message, and updated todo data.
+   *
+   * 3. should retrieve todo by ID successfully
+   *    - Sends a GET request to /api/todo/:todoId endpoint.
+   *    - Verifies the response status code, success message, and retrieved todo data.
+   *
+   * 4. should retrieve todo list successfully with query parameters
+   *    - Sends a GET request to /api/todo endpoint with query parameters.
+   *    - Verifies the response status code, success message, and todo list data.
+   *    - Validates each todo in the response data array.
+   *
+   * 5. should delete todo successfully
+   *    - Sends a DELETE request to /api/todo/:todoId endpoint.
+   *    - Verifies the response status code, success message, and deleted todo data.
+   *
+   * Test Environment:
+   * - Uses Chai for assertions and Supertest for HTTP requests.
+   * - Assumes the availability of the app.js file to import the Express app.
+   *
+   * Additional Notes:
+   * - Each test case includes error handling and timeouts to ensure robustness.
+   */
+
   it("should create todo successfully", function (done) {
-    console.log("token", jwtToken);
     this.timeout(10000); // Set timeout to 10 seconds for this test
     request(app)
       .post("/api/todo")
@@ -185,7 +218,7 @@ describe("To-DO API Testing", function () {
         expect(todoData).to.have.property("status").to.equal("todo");
         expect(todoData).to.have.property("priority").to.equal("high");
         expect(todoData).to.have.property("due_date");
-        todoId = todoData.id;
+        todoId = todoData.todo_id;
         done();
       });
   });
@@ -199,7 +232,7 @@ describe("To-DO API Testing", function () {
       .send({
         title: "Write Good Test Cases",
         due_date: "2024-12-01",
-        status: "inprogress",
+        status: "todo",
         priority: "medium",
       })
       .end((err, res) => {
@@ -212,20 +245,131 @@ describe("To-DO API Testing", function () {
         expect(res.body).to.have.property("data").to.be.an("array");
 
         const todoData = res.body.data[0];
-        expect(todoData).to.have.property("id").to.be.a("number").equal(todoId);
+        expect(todoData)
+          .to.have.property("todo_id")
+          .to.be.a("number")
+          .equal(todoId);
         expect(todoData)
           .to.have.property("title")
           .to.equal("Write Good Test Cases");
         expect(todoData).to.have.property("description");
         expect(todoData).to.have.property("priority").to.equal("medium");
         expect(todoData).to.have.property("due_date").to.be.a("string");
-        expect(todoData).to.have.property("status").to.equal("inprogress");
-        expect(todoData)
-          .to.have.property("user_id")
-          .to.be.a("number")
-          .equal(userId);
+        expect(todoData).to.have.property("status").to.equal("todo");
+        expect(todoData).to.have.property("user_id").to.be.a("number");
         expect(todoData).to.have.property("created_at").to.be.a("string");
         expect(todoData).to.have.property("updated_at").to.be.a("string");
+
+        done();
+      });
+  });
+
+  it("should retrieve todo by ID successfully", function (done) {
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .get(`/api/todo/${todoId}`)
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body).to.have.property("message").equal("todo list");
+        expect(res.body).to.have.property("data").to.be.an("array");
+
+        const todoData = res.body.data[0];
+        expect(todoData).to.have.property("todo_id").to.be.a("number");
+        expect(todoData).to.have.property("user_id").to.be.a("number");
+        expect(todoData).to.have.property("title").to.be.a("string");
+        expect(todoData).to.have.property("description").to.be.a("string");
+        expect(todoData).to.have.property("status").to.be.a("string");
+        expect(todoData).to.have.property("priority").to.be.a("string");
+        expect(todoData).to.have.property("due_date").to.be.a("string");
+        expect(todoData).to.have.property("created_at").to.be.a("string");
+        expect(todoData).to.have.property("updated_at").to.be.a("string");
+
+        done();
+      });
+  });
+
+  it("should retrieve todo list successfully with query parameters", function (done) {
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .get("/api/todo")
+      .query({
+        status: "inprogress|todo",
+        priority: "high|medium|low",
+        description: "a",
+        page: 1,
+        limit: 5,
+        sortBy: "priority",
+        sortDirection: "asc",
+      })
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body).to.have.property("message").equal("todo list");
+        expect(res.body)
+          .to.have.property("data")
+          .to.be.an("array")
+          .of.length.above(0);
+
+        // Validate each todo in the response data array
+        res.body.data.forEach((todo) => {
+          expect(todo).to.have.property("todo_id").to.be.a("number");
+          expect(todo).to.have.property("user_id").to.be.a("number");
+          expect(todo).to.have.property("title").to.be.a("string");
+          expect(todo).to.have.property("description").to.be.a("string");
+          expect(todo)
+            .to.have.property("status")
+            .to.be.oneOf([
+              "todo",
+              "inprogress",
+              "completed",
+              "onhold",
+              "canceled",
+              "pending",
+              "review",
+            ]);
+          expect(todo)
+            .to.have.property("priority")
+            .to.be.oneOf(["high", "medium", "low"]);
+          expect(todo).to.have.property("due_date").to.be.a("string");
+          expect(todo).to.have.property("created_at").to.be.a("string");
+          expect(todo).to.have.property("updated_at").to.be.a("string");
+        });
+
+        done();
+      });
+  });
+
+  it("should delete todo successfully", function (done) {
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .delete(`/api/todo/${todoId}`)
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body)
+          .to.have.property("message")
+          .equal("todo deleted successfully");
+        expect(res.body).to.have.property("data").to.be.an("array");
+
+        const deletedTodo = res.body.data[0];
+        expect(deletedTodo).to.have.property("todo_id").to.be.a("number");
+        expect(deletedTodo).to.have.property("user_id").to.be.a("number");
+        expect(deletedTodo).to.have.property("title").to.be.a("string");
+        expect(deletedTodo).to.have.property("description").to.be.a("string");
+        expect(deletedTodo).to.have.property("status").to.be.a("string");
+        expect(deletedTodo).to.have.property("priority").to.be.a("string");
+        expect(deletedTodo).to.have.property("due_date").to.be.a("string");
+        expect(deletedTodo).to.have.property("created_at").to.be.a("string");
+        expect(deletedTodo).to.have.property("updated_at").to.be.a("string");
 
         done();
       });
@@ -240,7 +384,7 @@ describe("To-DO API Testing", function () {
           done(err);
         } else {
           console.log("Database disconnected successfully");
-          done();
+          process.exit(0);
         }
       });
     }

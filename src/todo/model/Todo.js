@@ -58,7 +58,7 @@ const updateTodo = async (id, args) => {
       UPDATE ${TABLE_TODO} 
       SET ${setClause.join(", ")}, updated_at = NOW()
       WHERE id = $${idParamIndex}
-      RETURNING id, title, description, priority,due_date, status, user_id, created_at, updated_at;
+      RETURNING id AS todo_id, title, description, priority,due_date, status, user_id, created_at, updated_at;
     `;
 
     values.push(todoId);
@@ -86,7 +86,15 @@ const listTodo = async (args) => {
       // Specific todo with details
       const queryText = `
                 SELECT 
-                    *
+                    id AS todo_id,
+                    user_id,
+                    title,
+                    description,
+                    status,
+                    priority,
+                    due_date,
+                    created_at,
+                    updated_at
                 FROM todos
                 WHERE 
                     id=$1
@@ -99,7 +107,18 @@ const listTodo = async (args) => {
       }
     } else {
       const buildQuery = (args) => {
-        let queryText = `SELECT * FROM ${TABLE_TODO} WHERE 1=1 AND user_id=$1`;
+        let queryText = `
+        SELECT 
+          id AS todo_id,
+          user_id,
+          title,
+          description,
+          status,
+          priority,
+          due_date,
+          created_at,
+          updated_at
+        FROM ${TABLE_TODO} WHERE 1=1 AND user_id=$1`;
         const values = [args.userId];
         let valueIndex = 2;
 
@@ -185,7 +204,8 @@ const listTodo = async (args) => {
 const deleteTodoById = async (todoId, userId) => {
   const client = await poolQuery.connect();
   try {
-    const queryText = `DELETE FROM todos WHERE id=$1 AND user_id=$2 RETURNING *`;
+    const queryText = `DELETE FROM todos WHERE id=$1 AND user_id=$2 RETURNING id AS todo_id,user_id,title,description,status,priority,due_date,created_at,updated_at;
+`;
     const res = await client.query(queryText, [todoId, userId]);
     if (res.rows.length == 0) {
       throw new Error("no todo list exists");
