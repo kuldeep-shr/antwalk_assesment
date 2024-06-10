@@ -55,6 +55,14 @@ Welcome to the To-Do Backend API! This API allows you to manage your to-do lists
 
 <br />
 
+## ✅ For Test Cases
+
+Run `npm test`
+
+---
+
+ <br/>
+
 ## ⚙️ Configuration
 
 Create a .env file in the root directory and add your configuration variables:
