@@ -48,13 +48,16 @@ const createJWTToken = (args, expiresIn = "24h") => {
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
+    console.log("No token provided");
     return res.status(400).json(errorResponse("No token provided", 400));
   }
   try {
     const decoded = jwt.verify(token.split(" ")[1], SECRET_KEY);
     req.user = decoded;
+    console.log("perfect token", req.user);
     next();
   } catch (error) {
+    console.log("Invalid token");
     return res.status(400).json(errorResponse("Invalid token", 400));
   }
 };

@@ -6,7 +6,9 @@ const { DB_CONNECTION } = process.env;
 
 describe("User Creation API", function () {
   let pool;
-
+  let magicLinkUrl;
+  let jwtToken;
+  let userId;
   before(function (done) {
     // Increase the timeout for database connection setup
     this.timeout(10000); // Set timeout to 10 seconds
@@ -33,10 +35,10 @@ describe("User Creation API", function () {
   it("should return status 201 and success message on successful user creation", function (done) {
     this.timeout(10000); // Set timeout to 10 seconds for this test
     request(app)
-      .post("/api/auth/signin") // replace '/api/user' with your actual API endpoint for user creation
+      .post("/api/register")
       .send({
-        email: "ansh1@email.com",
-        name: "Ansh",
+        email: "dummy@test.com",
+        name: "Dummy",
       })
       .end((err, res) => {
         if (err) return done(err);
@@ -44,18 +46,77 @@ describe("User Creation API", function () {
         expect(res.body).to.have.property("status").equal("success");
         expect(res.body)
           .to.have.property("message")
-          .equal("user created successfully");
+          .equal(
+            "user created successfully and check your email for magic link"
+          );
         expect(res.body).to.have.property("data");
-        expect(res.body.data).to.have.property("id");
-        expect(res.body.data)
-          .to.have.property("email")
-          .equal("ansh1@email.com");
-        expect(res.body.data).to.have.property("name").equal("Ansh");
-        // Add more assertions for data properties if needed
-        expect(res.body.data).to.have.property("magic_link_token");
-        expect(res.body.data).to.have.property("magic_link_expires");
-        expect(res.body.data).to.have.property("created_at");
-        expect(res.body.data).to.have.property("updated_at");
+
+        const userData = Array.isArray(res.body.data)
+          ? res.body.data[0]
+          : res.body.data;
+        expect(userData).to.have.property("id").to.be.a("number");
+        expect(userData).to.have.property("email").equal("dummy@test.com");
+        expect(userData).to.have.property("name").equal("Dummy");
+        expect(userData).to.have.property("created_at").to.be.a("string");
+        expect(userData).to.have.property("updated_at").to.be.a("string");
+        expect(userData).to.have.property("magic_link_url").to.be.a("string");
+        userId = userData.id;
+        magicLinkUrl = userData.magic_link_url;
+
+        // Remove the hostname from magic_link_url and store in the global variable
+        const urlParts = new URL(userData.magic_link_url);
+        magicLinkUrl = `${urlParts.pathname}${urlParts.search}`;
+        done();
+      });
+  });
+
+  it("should verify magic link", function (done) {
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+
+    // Make GET request to the constructed URL
+    request(app)
+      .get(magicLinkUrl)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body)
+          .to.have.property("message")
+          .equal("magic link is correct");
+        expect(res.body).to.have.property("data").to.be.an("array");
+        expect(res.body.data[0]).to.have.property("jwt").to.be.a("string");
+        jwtToken = res.body.data[0].jwt;
+        done();
+      });
+  });
+
+  it("should update user information successfully", function (done) {
+    console.log("userId", userId);
+    console.log("jwtToken", jwtToken);
+    this.timeout(10000); // Set timeout to 10 seconds for this test
+    request(app)
+      .put(`/api/users/${userId}`)
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send({
+        name: "Dum",
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("status").equal("success");
+        expect(res.body)
+          .to.have.property("message")
+          .equal("user updated successfully");
+        expect(res.body).to.have.property("data").to.be.an("array");
+
+        const userData = res.body.data[0];
+        expect(userData).to.have.property("id").to.equal(userId);
+        expect(userData).to.have.property("name").to.equal("Dum");
+        expect(userData).to.have.property("email").to.equal("dummy@test.com");
+        expect(userData).to.have.property("created_at").to.be.a("string");
+        expect(userData).to.have.property("updated_at").to.be.a("string");
+
         done();
       });
   });

@@ -108,7 +108,7 @@ Create a .env file in the root directory and add your configuration variables:
         "name": "Shivam",
         "created_at": "2024-06-09T11:13:42.947Z",
         "updated_at": "2024-06-09T11:13:42.947Z",
-        "magic_link_url": "http://localhost:8000/api/validate?email=shivam@email.com&link=f443a6021f500ff274cdaaa3b38d8e864d91497c"
+        "magic_link_url": "http://localhost:8000/api/validate?email=shivam@email.com&link=f44XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1497c"
       }
     ],
     "statusCode": 201
@@ -136,9 +136,7 @@ Create a .env file in the root directory and add your configuration variables:
     "message": "please check your email for magic link",
     "data": [
       {
-        "link": "2a470b5be42d75e20be3820b6c068dab1fefd333",
-        "magic_link_url": "http://localhost:8000/api/validate?email=shivam@email.com&link=2a470b5be42d75e20be3820b6c068dab1fefd333",
-        "magic_link_expires": "2024-06-09T11:30:06.736Z"
+        "magic_link_url": "http://localhost:8000/api/validate?email=shivam@email.com&link=93XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXe954"
       }
     ],
     "statusCode": 200
@@ -171,6 +169,36 @@ Create a .env file in the root directory and add your configuration variables:
   ```
 
 <br />
+
+#### 👴✏️&nbsp; Update User API
+
+- **URL:** `/users/${userId}`
+- **Method:** `PUT`
+- **Body:**
+
+  ```json
+  {
+    "name": "Shiva"
+  }
+  ```
+
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "user updated successfully",
+    "data": [
+      {
+        "id": 6,
+        "name": "Shiv",
+        "email": "shivam@email.com",
+        "created_at": "2024-06-09T11:13:42.947Z",
+        "updated_at": "2024-06-10T03:34:21.518Z"
+      }
+    ],
+    "statusCode": 200
+  }
+  ```
 
 #### 🆕&nbsp; Create a todo
 

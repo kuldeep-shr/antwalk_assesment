@@ -17,7 +17,7 @@ const createUser = async (args) => {
     const newUser = await UserModel.createUser({
       name: args.name,
       email: args.email,
-      magic_link_token: magicLink.magic_link_token,
+      magic_link_token: magicLink.link,
       magic_link_expires: magicLink.magic_link_expires,
     });
 
@@ -49,7 +49,7 @@ const updateUser = async (userId, updateFields) => {
   const updatedUser = await UserModel.updateUser(userId, updateFields);
   return {
     message: "user updated successfully",
-    data: updatedUser,
+    data: [updatedUser],
   };
 };
 
@@ -69,6 +69,9 @@ const login = async (args) => {
       magic_link_expires: magicLink.magic_link_expires,
     });
 
+    const returnResponse = {
+      magic_link_url: magicLink.magic_link_url,
+    };
     // Send email with magic link
     await sendEmail(
       args.email,
@@ -79,7 +82,7 @@ const login = async (args) => {
 
     return {
       isError: false,
-      data: [magicLink],
+      data: [returnResponse],
       message: "please check your email for magic link",
     };
   } catch (error) {
